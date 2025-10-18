@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-func GetIPCString(ipcName string) string {
+func GetIPCString(ipcName string, autoClean bool) string {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)
@@ -22,7 +22,7 @@ func GetIPCString(ipcName string) string {
 	}
 
 	ipcFile := filepath.Join(baseDir, fmt.Sprintf("%s.sock", ipcName))
-	if isexist(ipcFile) {
+	if isexist(ipcFile) && autoClean {
 		remove(ipcFile)
 	}
 

@@ -9,7 +9,7 @@ import (
 )
 
 func Connect(ipcName string) net.Conn {
-	ipcString := ipcstr.GetIPCString(ipcName)
+	ipcString := ipcstr.GetIPCString(ipcName, false)
 
 	conn, err := net.Dial("unix", ipcString)
 	if err != nil {

@@ -9,7 +9,7 @@ import (
 )
 
 func Serv(ipcName string, onConnect func(conn net.Conn)) {
-	ipcString := ipcstr.GetIPCString(ipcName)
+	ipcString := ipcstr.GetIPCString(ipcName, true)
 
 	listener, err := net.Listen("unix", ipcString)
 	if err != nil {

@@ -5,7 +5,8 @@ package server
 import (
 	"fmt"
 	"net"
-	"pgoipc/ipcstr"
+
+	"github.com/runoneall/pgoipc/ipcstr"
 
 	"github.com/Microsoft/go-winio"
 )

@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/runoneall/pgoipc/client"
 	"github.com/runoneall/pgoipc/server"
@@ -13,38 +14,49 @@ import (
 
 func main_handleConn(conn net.Conn) {
 	reader := bufio.NewReader(conn)
-
-	data, err := reader.ReadString('\n')
+	req, err := reader.ReadString('\n')
 	if err != nil {
 		panic(err)
 	}
-	data = strings.TrimSuffix(data, "\n")
+	req = strings.TrimSpace(req)
 
-	fmt.Println("Recv:", data)
+	fmt.Println("Recv:", req)
 
-	if _, err := fmt.Fprintln(conn, "Repeat:", data); err != nil {
-		panic(err)
-	}
+	msg := fmt.Sprintf("REQ GET %s", req)
+
+	time.Sleep(time.Second)
+
+	fmt.Println("Send:", msg)
+	fmt.Fprintln(conn, msg)
 }
 
-func main_client(conn net.Conn) {
-	if _, err := fmt.Fprintln(conn, "Hello World!"); err != nil {
-		panic(err)
+func main_client(ipcName string) {
+	for i := range 10 {
+		func() {
+			conn := client.Connect(ipcName)
+			defer conn.Close()
+
+			msg := fmt.Sprintf("MSG IDX %d", i)
+
+			fmt.Println("Send:", msg)
+			fmt.Fprintln(conn, msg)
+
+			reader := bufio.NewReader(conn)
+			rep, err := reader.ReadString('\n')
+			if err != nil {
+				panic(err)
+			}
+			rep = strings.TrimSpace(rep)
+
+			fmt.Println("Recv:", rep)
+
+			time.Sleep(time.Second)
+		}()
 	}
-
-	reader := bufio.NewReader(conn)
-
-	data, err := reader.ReadString('\n')
-	if err != nil {
-		panic(err)
-	}
-	data = strings.TrimSuffix(data, "\n")
-
-	fmt.Println("Recv:", data)
 }
 
 func main() {
-	ipcName := "pgoipc_debug"
+	ipcName := "pgoipc_example"
 
 	switch os.Args[1] {
 
@@ -52,7 +64,7 @@ func main() {
 		server.Serv(ipcName, main_handleConn)
 
 	case "c":
-		main_client(client.Connect(ipcName))
+		main_client(ipcName)
 
 	}
 }

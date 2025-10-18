@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"net"
 	"os"
-	"pgoipc/client"
-	"pgoipc/server"
 	"strings"
+
+	"github.com/runoneall/pgoipc/client"
+	"github.com/runoneall/pgoipc/server"
 )
 
 func main_handleConn(conn net.Conn) {

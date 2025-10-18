@@ -1,4 +1,4 @@
-module pgoipc
+module github.com/runoneall/pgoipc
 
 go 1.25.3
 

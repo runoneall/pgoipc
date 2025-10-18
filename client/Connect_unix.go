@@ -5,7 +5,8 @@ package client
 import (
 	"fmt"
 	"net"
-	"pgoipc/ipcstr"
+
+	"github.com/runoneall/pgoipc/ipcstr"
 )
 
 func Connect(ipcName string) net.Conn {

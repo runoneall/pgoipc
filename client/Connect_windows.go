@@ -11,7 +11,7 @@ import (
 	"github.com/Microsoft/go-winio"
 )
 
-func Connect(ipcName string) net.Conn {
+func Connect(ipcName string, onConnect func(conn net.Conn)) {
 	ipcString := ipcstr.GetIPCString(ipcName)
 
 	conn, err := winio.DialPipe(ipcString, nil)
@@ -19,5 +19,6 @@ func Connect(ipcName string) net.Conn {
 		panic(fmt.Errorf("不能连接到 Named Pipe: %v", err))
 	}
 
-	return conn
+	onConnect(conn)
+	conn.Close()
 }

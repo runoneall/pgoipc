@@ -32,10 +32,7 @@ func main_handleConn(conn net.Conn) {
 
 func main_client(ipcName string) {
 	for i := range 10 {
-		func() {
-			conn := client.Connect(ipcName)
-			defer conn.Close()
-
+		client.Connect(ipcName, func(conn net.Conn) {
 			msg := fmt.Sprintf("MSG IDX %d", i)
 
 			fmt.Println("Send:", msg)
@@ -51,7 +48,7 @@ func main_client(ipcName string) {
 			fmt.Println("Recv:", rep)
 
 			time.Sleep(time.Second)
-		}()
+		})
 	}
 }
 

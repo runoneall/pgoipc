@@ -9,7 +9,7 @@ import (
 	"github.com/runoneall/pgoipc/ipcstr"
 )
 
-func Connect(ipcName string) net.Conn {
+func Connect(ipcName string, onConnect func(conn net.Conn)) {
 	ipcString := ipcstr.GetIPCString(ipcName, false)
 
 	conn, err := net.Dial("unix", ipcString)
@@ -17,5 +17,6 @@ func Connect(ipcName string) net.Conn {
 		panic(fmt.Errorf("不能连接到 Unix 域: %v", err))
 	}
 
-	return conn
+	onConnect(conn)
+	conn.Close()
 }
